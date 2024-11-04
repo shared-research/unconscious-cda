@@ -1,0 +1,53 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = ""
+)
+```
+
+# Tracking the Unconscious: Neural evidence for the retention of unaware information in visual working memory
+
+[<img alt="alt_text" src="https://img.shields.io/badge/OSF-https://osf.io/gkmsy/-337AB7"/>](https://osf.io/gkmsy/)
+
+This repository contains the code to reproduce the analysis, figures and tables of the paper *Tracking the Unconscious: Neural evidence for the retention of unaware information in visual working memory* by Gambarota et al. The repository contains also the code to run the experiment using Psychopy along with raw EEG and behavioral data.
+
+## Structure
+
+- The `data` folder contains the raw and cleaned EEG and behavioral data:
+
+```{r}
+#| echo: false
+fs::dir_tree("data", recurse = TRUE, type = "directory")
+```
+
+- The `experiment/` folder contains python scripts to run the experiment.
+
+```{r}
+#| echo: false
+fs::dir_tree("experiment", recurse = TRUE)
+```
+
+- `tables/` and `figures/` contains the tables and figures from the paper created with the `02_analysis-behavioral.R`.
+- the `01_pre-processing-behavioral.R` script cleans the raw behavioral data
+- the `02_analysis-behavioral.R` script runs the multilevel models for the CDT accuracy and SDT analysis
+ creating also tables and figures
+- the `03_analysis-cda.R` script runs the analysis on ERP data
+- the `brain-vision-analyzer-script.ehtp` is the EEG/ERP pre-processing script
+
+Given the storage limits, the raw EEG data are stored on OSF within the `eeg-raw-data` folder. The content of this folder need be downloaded and placed within the `data/raw/eeg` folder before running the scripts.
+
+All the packages are managed using `renv`. Before running the code open the `cda-subliminal.Rproj` file and run `renv::restore()` to create the custom library with all packages. If the `renv` package is not installed run `install.packages("renv")`.
+
+## Session
+
+```{r}
+#| echo: false
+sessioninfo::session_info()$platform
+```
+
