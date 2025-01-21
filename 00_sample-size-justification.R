@@ -84,7 +84,7 @@ power <- sapply(ns, function(x) power_p(p = p, nt = nt, x, s = s))
 
 # find the closest sample size to 80% power
 
-idx <- which.min(abs(power - 0.8))
+idx <- which.min(abs(power - tpower))
 
 res_n <- ns[idx]
 res_power <- power[idx]
