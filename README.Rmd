@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 [<img alt="alt_text" src="https://img.shields.io/badge/OSF-https://osf.io/gkmsy/-337AB7"/>](https://osf.io/gkmsy/)
 
-This repository contains the code to reproduce the analysis, figures and tables of the paper *Tracking the Unconscious: Neural evidence for the retention of unaware information in visual working memory* by Gambarota et al. The repository contains also the code to run the experiment using Psychopy along with raw EEG and behavioral data.
+This repository contains the code to reproduce the analysis, figures and tables of the paper *Tracking the Unconscious: Neural evidence for the retention of unaware information in visual working memory* by Gambarota et al. The repository contains also the code to run the experiment using Psychopy along with EEG/ERP and behavioral data.
 
 ## Structure
 
@@ -26,21 +26,22 @@ This repository contains the code to reproduce the analysis, figures and tables 
 fs::dir_tree("data", recurse = TRUE, type = "directory")
 ```
 
-- The `experiment/` folder contains python scripts to run the experiment.
+The `clean/` folder contains the cleaned behavioral data (using the `01_pre-processing-behavioral.R` script) and the per-condition and channel averaged ERP data. The `clean/eeg/ERP-all-channels-conds/` contains the average for each subject, channel and condition. The `all relevant conditions_300-1200.*` files is a subset of the previous file for the analyzed channels used in the main analysis (`03_analysis-cda.R`). The reported pool of channels can be manually calculated mediating averaged ERP data (i.e., the content of the `all relevant conditions_300-1200.*` files).
+
+- The `experiment/` folder contains python scripts to run the experiment. The `experiment.py` is the PsychoPy script for the experiment, the `triggers.py` is the dictionary for the EEG markers and `utils.py` a set of functions imported into the main script.
 
 ```{r}
 #| echo: false
 fs::dir_tree("experiment", recurse = TRUE)
 ```
 
-- `tables/` and `figures/` contains the tables and figures from the paper created with the `02_analysis-behavioral.R`.
+- `tables/` and `figures/` contains the tables and figures from the paper.
 - the `01_pre-processing-behavioral.R` script cleans the raw behavioral data
-- the `02_analysis-behavioral.R` script runs the multilevel models for the CDT accuracy and SDT analysis
- creating also tables and figures
-- the `03_analysis-cda.R` script runs the analysis on ERP data
-- the `brain-vision-analyzer-script.ehtp` is the EEG/ERP pre-processing script
+- the `02a_analysis-behavioral.R` script runs the mixed-effects models for the CDT accuracy and SDT analysis with also all the tables/figures.
+- the `02b_pas-stability.R` script contains additional behavioral analyses on the PAS usage during the experiment.
+- the `03_analysis-cda.R` script runs the analysis on ERP data and creates the figures of the waveforms.
 
-Given the storage limits, the raw EEG data are stored on OSF within the `eeg-raw-data` folder. The content of this folder need be downloaded and placed within the `data/raw/eeg` folder before running the scripts.
+The `eeg-erp-analysis` folder contains the BrainVision pipeline script that can be used with the software installed and a `txt` file with the pipeline in plain text to reproduce the analysis with another software.
 
 All the packages are managed using `renv`. Before running the code open the `cda-subliminal.Rproj` file and run `renv::restore()` to create the custom library with all packages. If the `renv` package is not installed run `install.packages("renv")`.
 

@@ -1,0 +1,67 @@
+---
+title: Paper analysis
+format: html
+embed-resources: true
+execute: 
+  echo: false
+---
+
+```{r}
+#| message: false
+#| warning: false
+library(here)
+library(kableExtra)
+library(tidyverse)
+
+cda_res <- readRDS(here("objects", "cda_res.rds"))
+behav_res <- readRDS(here("objects", "behav_res.rds"))
+pas_stability_res <- readRDS(here("objects", "pas_stability_res.rds"))
+
+# cda pre processing
+cda_contrasts <- do.call(rbind, lapply(cda_res, function(x) x$test))
+cda_desc <- do.call(rbind, lapply(cda_res, function(x) x$desc))
+rownames(cda_desc) <- NULL
+cda_plots <- lapply(cda_res, function(x) x$plot)
+```
+
+# Behavioural
+
+## SDT analysis of PAS (overall)
+
+```{r}
+summary(behav_res$fit_sdt_pas)
+```
+
+## SDT analysis of PAS (by block)
+
+```{r}
+summary(pas_stability_res$fit_pas_sdt_block)
+```
+
+# EEG/ERP
+
+## Descriptive
+
+```{r}
+cda_desc |> 
+  select(cond, everything()) |> 
+    distinct() |> 
+    kable(digits = 3) |> 
+    kable_styling()
+```
+
+## Contrasts
+
+```{r}
+cda_contrasts |> 
+    kable(digits = 3) |> 
+    kable_styling()
+```
+
+## Plots
+
+```{r}
+#| fig-height: 10
+#| fig-align: center
+cowplot::plot_grid(plotlist = cda_plots, ncol = 1)
+```

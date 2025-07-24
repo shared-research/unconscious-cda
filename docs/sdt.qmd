@@ -1,0 +1,295 @@
+---
+title: Signal Detection Theory (SDT)
+subtitle: Generalized Linear Models
+format: html
+embed-resources: true
+execute: 
+  echo: false
+bibliography: "https://raw.githubusercontent.com/filippogambarota/bib-database/main/references.bib"
+csl: "https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl"
+---
+
+# Theory
+
+Within the SDT framework for a yes-no task, the *criterion* or response bias is the tendency to say yes or no [@Stanislaw1999-jr]. The criterion is formalized in @eq-criterion.
+
+$$
+c = -\frac{\Phi(H) + \Phi(FA)}{2}
+$${#eq-criterion}
+
+In practice is average between the False Alarm (FA) rate and the Hit (H) rate. When $H = FA$ the criterion is $c = 0$ (unbiased). 
+
+- When $FA > MISS$ there is a tendency to say *yes* and the criterion is negative (i.e., *liberal*).
+- When $FA < MISS$ there is a tendency to say *no* and the criterion is positive (i.e., *conservative*)
+
+# SDT as GLM
+
+The SDT parameters can be estimated using a Generalized Linear Model [see @DeCarlo1998-ay]. In particular, using a Binomial model with a probit link function. The response variable is the *yes-no* response from participants and the predictor is the binary variable indicating if the signal was present or absent. The model intercept is the criterion as defined in @eq-criterion only when the predictor (signal present vs absent) is coded using -0.5 and 0.5 (and not the default dummy coding). The model slope is the $d'$.
+
+# Example
+
+We can simulate a detection experiment and trying to recover the true parameters with the standard calculation and the GLM approach.
+
+```{r}
+#| echo: true
+
+set.seed(2025)
+n <- 1e3 # number of trials, a lot for precision
+is_signal <- rep(0:1, each = n) # signal present vs absent
+d <- 1 # dprime, distance between signal and noise
+c <- 0 # criterion, unbiased
+
+# internal evidence (latent) signal + noise
+signal <- ifelse(is_signal == 0, rnorm(n, 0, 1), rnorm(n, d, 1))
+
+# decision based on evidence and criterion
+say_signal <- ifelse(signal > (d/2 + c), 1, 0)
+```
+
+This is the true signal and noise distribution is depicted in @fig-sdt-example.
+
+```{r}
+#| echo: false
+#| label: fig-sdt-example
+#| fig-cap: Example of the SDT model with $d = 1$ and $c = 0$
+curve(dnorm(x, 0, 1), d/2 - 5, d/2 + 5, col = "black", lwd = 2, xlab = "x", ylab = "Density")
+curve(dnorm(x, d, 1), add = TRUE, col = "dodgerblue", lwd = 2)
+abline(v = d/2 + c, lty = "dashed")
+```
+
+Then we can compute the SDT measures using the `psycho::dprime()` function.
+
+```{r}
+hit   <- sum(is_signal == 1 & say_signal == 1)
+fa    <- sum(is_signal == 0 & say_signal == 1)
+miss  <- sum(is_signal == 1 & say_signal == 0)
+cr    <- sum(is_signal == 0 & say_signal == 0)
+
+psycho::dprime(hit, fa, miss, cr)
+```
+
+Let's simulate a biased criterion. A positive criterion should be a tendency to say NO, thus higher number of misses and lower false alarm.
+
+```{r}
+set.seed(2025)
+n <- 1e3 # number of trials, a lot for precision
+is_signal <- rep(0:1, each = n) # signal present vs absent
+d <- 1 # dprime, distance between signal and noise
+c <- 0.5 # criterion, unbiased
+
+# internal evidence (latent) signal + noise
+signal <- ifelse(is_signal == 0, rnorm(n, 0, 1), rnorm(n, d, 1))
+
+# decision based on evidence and criterion
+say_signal <- ifelse(signal > (d/2 + c), 1, 0)
+
+hit   <- sum(is_signal == 1 & say_signal == 1)
+fa    <- sum(is_signal == 0 & say_signal == 1)
+miss  <- sum(is_signal == 1 & say_signal == 0)
+cr    <- sum(is_signal == 0 & say_signal == 0)
+
+psycho::dprime(hit, fa, miss, cr)
+
+c(
+    hit = hit,
+    miss = miss,
+    fa = fa,
+    cr = cr
+)
+```
+
+Now let's simulate a negative criterion thus the tendency to say YES where false alarm are higher than misses.
+
+```{r}
+set.seed(2025)
+n <- 1e3 # number of trials, a lot for precision
+is_signal <- rep(0:1, each = n) # signal present vs absent
+d <- 1 # dprime, distance between signal and noise
+c <- -0.5 # criterion, unbiased
+
+# internal evidence (latent) signal + noise
+signal <- ifelse(is_signal == 0, rnorm(n, 0, 1), rnorm(n, d, 1))
+
+# decision based on evidence and criterion
+say_signal <- ifelse(signal > (d/2 + c), 1, 0)
+
+hit   <- sum(is_signal == 1 & say_signal == 1)
+fa    <- sum(is_signal == 0 & say_signal == 1)
+miss  <- sum(is_signal == 1 & say_signal == 0)
+cr    <- sum(is_signal == 0 & say_signal == 0)
+
+sdt <- psycho::dprime(hit, fa, miss, cr)
+sdt
+
+c(
+    hit = hit,
+    miss = miss,
+    fa = fa,
+    cr = cr
+)
+```
+
+Finally let's use a GLM to estimate SDT parameters from the last simulation:
+
+```{r}
+dat <- data.frame(
+    say_signal,
+    is_signal
+)
+
+dat$is_signal <- factor(dat$is_signal)
+
+fit <- glm(say_signal ~ is_signal, 
+           data = dat, 
+           contrasts = list(is_signal = contr.sum(2)/2), 
+           family = binomial(link = "probit"))
+
+summary(fit)
+```
+
+The `(Intercept)` is the criterion and `is_signal1` the $d'$. The values are pretty similar to the `psycho::dprime()` function but the sign is reverted:
+
+```{r}
+# psycho::dprime()
+c(
+    c = sdt$c,
+    dprime = sdt$dprime
+)
+
+# glm
+coef(fit)
+```
+
+Firstly we need to change the sign of the contrasts:
+
+```{r}
+fit <- glm(say_signal ~ is_signal, 
+           data = dat, 
+           contrasts = list(is_signal = -contr.sum(2)/2), 
+           family = binomial(link = "probit"))
+
+summary(fit)
+```
+
+But this affect only the $d'$ that now is correct in terms of sign. To recover the parameters of the conventional way of expressing the criterion we can:
+
+- simply change the sign of the intercept (and the confidence interval)
+- change the response variable to 1 = not seen and 0 = seen
+
+```{r}
+summ <- broom::tidy(fit, conf.int = TRUE)
+summ[1, "estimate"] <- summ[1, "estimate"] * -1
+ci <- c(summ$conf.low[1], summ$conf.high[1])
+ci <- -1 * rev(ci)
+summ[1, "conf.low"] <- ci[1]
+summ[1, "conf.high"] <- ci[2]
+summ
+```
+
+```{r}
+dat$say_signal_rev <- ifelse(dat$say_signal == 1, 0, 1)
+
+fit_rev <- glm(say_signal_rev ~ is_signal, 
+               data = dat, 
+               contrasts = list(is_signal = contr.sum(2)/2), 
+               family = binomial(link = "probit"))
+
+broom::tidy(fit_rev, conf.int = TRUE)
+```
+
+# Predictors on SDT parameters
+
+I want to simulate a change in criterion and recover from the GLM model.
+
+```{r}
+set.seed(2025)
+n <- 1e4
+cond <- c(0, 1)
+is_signal <- c(0, 1)
+dat <- expand.grid(is_signal = is_signal, cond = cond, n = 1:n)
+dat$n <- 1:nrow(dat)
+dat$c <- ifelse(dat$cond == 0, 0, 0)
+dat$d <- ifelse(dat$is_signal == 0, 0, 1)
+dat$signal <- rnorm(nrow(dat), dat$d, 1)
+dat$say_signal <- ifelse(dat$signal > (dat$d/2 + dat$c), 1, 0)
+dat$say_signal_c <- ifelse(dat$say_signal == 1, 0, 1)
+dat$cond <- factor(dat$cond)
+dat$is_signal <- factor(dat$is_signal )
+
+fit <- glm(say_signal ~ is_signal * cond,
+           data = dat,
+           contrasts = list(is_signal = contr.sum(2)/2,
+                            cond = contr.treatment(2)),
+           family = binomial(link = "probit"))
+summary(fit)
+```
+
+```{r}
+set.seed(2025)
+n <- 1e4 # number of trials, a lot for precision
+
+# cond 1
+is_signal <- rep(0:1, each = n/2) # signal present vs absent
+d_1 <- 1 # dprime, distance between signal and noise
+d_2 <- 1
+c_1 <- 0 # criterion
+c_2 <- 0.5
+
+# internal evidence (latent) signal + noise
+signal_1 <- ifelse(is_signal == 0, rnorm(n, 0, 1), rnorm(n, d_1, 1))
+signal_2 <- ifelse(is_signal == 0, rnorm(n, 0, 1), rnorm(n, d_2, 1))
+
+# decision based on evidence and criterion
+say_signal_1 <- ifelse(signal_1 > (d_1/2 + c_1), 1, 0)
+say_signal_2 <- ifelse(signal_2 > (d_2/2 + c_2), 1, 0)
+
+dat <- data.frame(
+    say_signal = c(say_signal_1, say_signal_2),
+    cond = rep(0:1, each = n),
+    is_signal = rep(is_signal, 2)
+)
+
+dat$say_signal_rev <- ifelse(dat$say_signal == 1, 0, 1)
+dat$is_signal <- factor(dat$is_signal)
+dat$cond <- factor(dat$cond)
+
+fit <- glm(say_signal_rev ~ is_signal * cond, 
+    data = dat, 
+    family = binomial(link = "probit"), 
+    contrasts = list(is_signal = contr.sum(2)/2))
+
+summary(fit)
+coefs <- coef(fit)
+
+c(
+    c0 = coefs[1],
+    c2 = coefs[1] + coefs[3],
+    d0 = coefs[2],
+    d1 = coefs[2] + coefs[4]
+)
+
+dat0 <- dat[dat$cond == 0, ]
+dat1 <- dat[dat$cond == 1, ]
+
+hit0   <- with(dat0, sum(is_signal == 1 & say_signal == 1))
+fa0    <- with(dat0, sum(is_signal == 0 & say_signal == 1))
+miss0  <- with(dat0, sum(is_signal == 1 & say_signal == 0))
+cr0    <- with(dat0, sum(is_signal == 0 & say_signal == 0))
+
+hit1   <- with(dat1, sum(is_signal == 1 & say_signal == 1))
+fa1   <- with(dat1, sum(is_signal == 0 & say_signal == 1))
+miss1  <- with(dat1, sum(is_signal == 1 & say_signal == 0))
+cr1    <- with(dat1, sum(is_signal == 0 & say_signal == 0))
+
+psycho::dprime(
+    hit0, fa0, miss0, cr0
+)
+
+psycho::dprime(
+    hit1, fa1, miss1, cr1
+)
+```
+
+With this parametrization (`is_signal` with sum to zero contrasts and `cond` with treatment contrasts) the coefficients are differences in criterion and $d'$.
+
+# References

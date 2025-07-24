@@ -1,0 +1,408 @@
+1. 
+
+*** Filters ***
+Butterworth Zero Phase Filters
+Low Cutoff: 0.1 Hz, Time constant 1.591549, 24 dB/oct
+High Cutoff: 30 Hz, 24 dB/oct
+Notch Filter: 50 Hz
+
+Created Using Component Version 2.1.0.1056
+
+2.
+
+*** New Reference ***
+Selected channels to include into the new reference:
+ear_right 
+The implicit reference is included in the calculation of the new reference.
+
+Channels to which the new reference applies to:
+AF3 AF4 AF7 AF8 AFz C1 C2 C3 C4 C5
+C6 CP1 CP2 CP3 CP4 CP5 CP6 CPz Cz F1
+F2 F3 F4 F5 F6 F7 F8 FC1 FC2 FC3
+FC4 FC5 FC6 Fp1 Fp2 FT7 FT8 Fz HEOG_left HEOG_right
+Iz O1 O2 Oz P1 P2 P3 P4 P5 P6
+P7 P8 PO3 PO4 PO7 PO8 POz Pz T7 T8
+TP7 TP8 VEOG_down 
+Remaining (non rereferenced) channels are discarded.
+
+Name of the new reference channel: <empty>
+
+
+Created Using Component Version 2.0.2682
+
+3.
+
+*** Formula Evaluator ***
+
+The following formulas were calculated:
+VEOG = Fp1-VEOG_down           Unit: µV
+HEOG = HEOG_right-HEOG_left    Unit: µV
+
+The remaining channels were kept.
+The new channels are on top.
+
+Created Using Component Version 2.0.5704
+
+4.
+
+*** Edit Channels ***
+
+The following channels have been disabled:
+VEOG_down	HEOG_left	HEOG_right	
+
+Channel Properties:
+
+				Labels:					Position:
+Orig. Order	Orig. Label	Chn (+) -	Chn(-)		Radius	 Theta	   Phi		Data Unit	Color		User Properties
+1		VEOG		VEOG				   0.0	   0.0	   0.0		µV		Black	
+2		HEOG		HEOG				   0.0	   0.0	   0.0		µV		Black	
+3		Fp1		Fp1				   1.0	 -90.0	 -72.0		µV		Black	
+4		Fz		Fz				   1.0	  45.0	  90.0		µV		Black	
+5		F3		F3				   1.0	 -60.0	 -51.0		µV		Black	
+6		F7		F7				   1.0	 -90.0	 -36.0		µV		Black	
+8		FC5		FC5				   1.0	 -69.0	 -21.0		µV		Black	
+9		FC1		FC1				   1.0	 -31.0	 -46.0		µV		Black	
+10		C3		C3				   1.0	 -45.0	   0.0		µV		Black	
+11		T7		T7				   1.0	 -90.0	   0.0		µV		Black	
+13		CP5		CP5				   1.0	 -69.0	  21.0		µV		Black	
+14		CP1		CP1				   1.0	 -31.0	  46.0		µV		Black	
+15		Pz		Pz				   1.0	  45.0	 -90.0		µV		Black	
+16		P3		P3				   1.0	 -60.0	  51.0		µV		Black	
+17		P7		P7				   1.0	 -90.0	  36.0		µV		Black	
+18		O1		O1				   1.0	 -90.0	  72.0		µV		Black	
+19		Oz		Oz				   1.0	  90.0	 -90.0		µV		Black	
+20		O2		O2				   1.0	  90.0	 -72.0		µV		Black	
+21		P4		P4				   1.0	  60.0	 -51.0		µV		Black	
+22		P8		P8				   1.0	  90.0	 -36.0		µV		Black	
+23		CP6		CP6				   1.0	  69.0	 -21.0		µV		Black	
+24		CP2		CP2				   1.0	  31.0	 -46.0		µV		Black	
+25		Cz		Cz				   1.0	   0.0	   0.0		µV		Black	
+26		C4		C4				   1.0	  45.0	   0.0		µV		Black	
+27		T8		T8				   1.0	  90.0	   0.0		µV		Black	
+29		FC6		FC6				   1.0	  69.0	  21.0		µV		Black	
+30		FC2		FC2				   1.0	  31.0	  46.0		µV		Black	
+31		F4		F4				   1.0	  60.0	  51.0		µV		Black	
+32		F8		F8				   1.0	  90.0	  36.0		µV		Black	
+33		Fp2		Fp2				   1.0	  90.0	  72.0		µV		Black	
+34		AF7		AF7				   1.0	 -90.0	 -54.0		µV		Black	
+35		AF3		AF3				   1.0	 -74.0	 -68.0		µV		Black	
+36		AFz		AFz				   1.0	  67.0	  90.0		µV		Black	
+37		F1		F1				   1.0	 -49.0	 -68.0		µV		Black	
+38		F5		F5				   1.0	 -74.0	 -41.0		µV		Black	
+39		FT7		FT7				   1.0	 -90.0	 -18.0		µV		Black	
+40		FC3		FC3				   1.0	 -49.0	 -29.0		µV		Black	
+41		C1		C1				   1.0	 -23.0	   0.0		µV		Black	
+42		C5		C5				   1.0	 -68.0	   0.0		µV		Black	
+43		TP7		TP7				   1.0	 -90.0	  18.0		µV		Black	
+44		CP3		CP3				   1.0	 -49.0	  29.0		µV		Black	
+45		P1		P1				   1.0	 -49.0	  68.0		µV		Black	
+46		P5		P5				   1.0	 -74.0	  41.0		µV		Black	
+47		PO7		PO7				   1.0	 -90.0	  54.0		µV		Black	
+48		PO3		PO3				   1.0	 -74.0	  68.0		µV		Black	
+49		POz		POz				   1.0	  67.0	 -90.0		µV		Black	
+50		PO4		PO4				   1.0	  74.0	 -68.0		µV		Black	
+51		PO8		PO8				   1.0	  90.0	 -54.0		µV		Black	
+52		P6		P6				   1.0	  74.0	 -41.0		µV		Black	
+53		P2		P2				   1.0	  49.0	 -68.0		µV		Black	
+54		CPz		CPz				   1.0	  22.0	 -90.0		µV		Black	
+55		CP4		CP4				   1.0	  49.0	 -29.0		µV		Black	
+56		TP8		TP8				   1.0	  90.0	 -18.0		µV		Black	
+57		C6		C6				   1.0	  68.0	   0.0		µV		Black	
+58		C2		C2				   1.0	  23.0	   0.0		µV		Black	
+59		FC4		FC4				   1.0	  49.0	  29.0		µV		Black	
+60		FT8		FT8				   1.0	  90.0	  18.0		µV		Black	
+61		F6		F6				   1.0	  74.0	  41.0		µV		Black	
+62		AF8		AF8				   1.0	  90.0	  54.0		µV		Black	
+63		AF4		AF4				   1.0	  74.0	  68.0		µV		Black	
+64		F2		F2				   1.0	  49.0	  68.0		µV		Black	
+65		Iz		Iz				   1.0	 112.0	 -90.0		µV		Black	
+
+Channel positions have been changed.
+
+Channel order has been changed.
+
+Created Using Component Version 2.1.0.327
+
+5.
+
+left-PAS1_correct
+
+*** Segmentation ***
+Segmentation relative to reference marker positions
+Reference markers:
+    Stimulus    S132
+    Stimulus    S133
+    Stimulus    S136
+    Stimulus    S131
+    Stimulus    S135
+    Stimulus    S134
+Advanced Boolean Expression:
+    S121(-1000,0) AND S71(0,8000) AND S61(0,7000)
+Segment size and position relative to reference markers:
+Start: -200.00 ms, End: 1200.00 ms, Length: 1400.00 ms
+
+
+Data was not stored but will be calculated on demand.
+
+Created Using Component Version 2.1.0.327
+
+
+right-PAS1_correct
+
+*** Segmentation ***
+Segmentation relative to reference marker positions
+Reference markers:
+    Stimulus    S132
+    Stimulus    S133
+    Stimulus    S136
+    Stimulus    S131
+    Stimulus    S135
+    Stimulus    S134
+Advanced Boolean Expression:
+    S122(-1000,0) AND S71(0,8000) AND S61(0,7000)
+Segment size and position relative to reference markers:
+Start: -200.00 ms, End: 1200.00 ms, Length: 1400.00 ms
+
+
+Data was not stored but will be calculated on demand.
+
+Created Using Component Version 2.1.0.327
+
+
+left-PAS1_wrong
+
+*** Segmentation ***
+Segmentation relative to reference marker positions
+Reference markers:
+    Stimulus    S132
+    Stimulus    S133
+    Stimulus    S136
+    Stimulus    S131
+    Stimulus    S135
+    Stimulus    S134
+Advanced Boolean Expression:
+    S121(-1000,0) AND S71(0,8000) AND S60(0,7000)
+Segment size and position relative to reference markers:
+Start: -200.00 ms, End: 1200.00 ms, Length: 1400.00 ms
+
+
+Data was not stored but will be calculated on demand.
+
+Created Using Component Version 2.1.0.327
+
+
+right-PAS1_wrong
+
+*** Segmentation ***
+Segmentation relative to reference marker positions
+Reference markers:
+    Stimulus    S132
+    Stimulus    S133
+    Stimulus    S136
+    Stimulus    S131
+    Stimulus    S135
+    Stimulus    S134
+Advanced Boolean Expression:
+    S122(-1000,0) AND S71(0,8000) AND S60(0,7000)
+Segment size and position relative to reference markers:
+Start: -200.00 ms, End: 1200.00 ms, Length: 1400.00 ms
+
+
+Data was not stored but will be calculated on demand.
+
+Created Using Component Version 2.1.0.327
+
+
+left-PAS2_correct
+
+*** Segmentation ***
+Segmentation relative to reference marker positions
+Reference markers:
+    Stimulus    S132
+    Stimulus    S133
+    Stimulus    S136
+    Stimulus    S131
+    Stimulus    S135
+    Stimulus    S134
+Advanced Boolean Expression:
+    S121(-1000,0) AND S72(0,8000) AND S61(0,7000)
+Segment size and position relative to reference markers:
+Start: -200.00 ms, End: 1200.00 ms, Length: 1400.00 ms
+
+
+Data was not stored but will be calculated on demand.
+
+Created Using Component Version 2.1.0.327
+
+
+right-PAS2_correct
+
+*** Segmentation ***
+Segmentation relative to reference marker positions
+Reference markers:
+    Stimulus    S132
+    Stimulus    S133
+    Stimulus    S136
+    Stimulus    S131
+    Stimulus    S135
+    Stimulus    S134
+Advanced Boolean Expression:
+    S122(-1000,0) AND S72(0,8000) AND S61(0,7000)
+Segment size and position relative to reference markers:
+Start: -200.00 ms, End: 1200.00 ms, Length: 1400.00 ms
+
+
+Data was not stored but will be calculated on demand.
+
+Created Using Component Version 2.1.0.327
+
+
+left_PAS1_catch
+
+*** Segmentation ***
+Segmentation relative to reference marker positions
+Reference markers:
+    Stimulus    S130
+Advanced Boolean Expression:
+    S121(-1000,0) AND S71(0,8000)
+Segment size and position relative to reference markers:
+Start: -200.00 ms, End: 1200.00 ms, Length: 1400.00 ms
+
+
+Data was not stored but will be calculated on demand.
+
+Created Using Component Version 2.1.0.327
+
+
+right_PAS1_catch
+
+*** Segmentation ***
+Segmentation relative to reference marker positions
+Reference markers:
+    Stimulus    S130
+Advanced Boolean Expression:
+    S122(-1000,0) AND S71(0,8000)
+Segment size and position relative to reference markers:
+Start: -200.00 ms, End: 1200.00 ms, Length: 1400.00 ms
+
+
+Data was not stored but will be calculated on demand.
+
+Created Using Component Version 2.1.0.327
+
+
+6.
+
+*** Baseline Correction Transformation ***
+
+Begin: -200 [ms] 
+End: 0 [ms]
+
+Created Using Component Version 2.1.0.1332
+
+
+7.
+
+*** Artifact Rejection - Automatic Inspection ***
+
+Used Channels: 1
+HEOG	
+Check Amplitude: 
+Minimal allowed amplitude: -50 µV
+Maximal allowed amplitude: 50 µV
+Mark as Bad: 	 Before Event: 200 ms	 After Event: 200 ms
+
+
+*** Artifact Rejection - Automatic Inspection ***
+
+Used Channels: 1
+VEOG	
+Check Amplitude: 
+Minimal allowed amplitude: -80 µV
+Maximal allowed amplitude: 80 µV
+Mark as Bad: 	 Before Event: 200 ms	 After Event: 200 ms
+
+
+*** Artifact Rejection - Automatic Inspection ***
+
+Used Channels: 60
+AF3	AF4	AF7	AF8	AFz	C1	C2	C3	C4	C5	C6	CP1	CP2	CP3	CP4	CP5	CP6	CPz	Cz	F1	F2	F3	F4	F5	F6	F7	F8	FC1	FC2	FC3	FC4	FC5	FC6	Fp1	Fp2	FT7	FT8	Fz	Iz	O1	O2	Oz	P1	P2	P3	P4	P5	P6	P7	P8	PO3	PO4	PO7	PO8	POz	Pz	T7	T8	TP7	TP8	
+Check Amplitude: 
+Minimal allowed amplitude: -80 µV
+Maximal allowed amplitude: 80 µV
+Mark as Bad: 	 Before Event: 200 ms	 After Event: 200 ms
+
+
+8.
+
+*** Average ***
+Create data set for standard deviation.
+
+
+9.
+
+CDA (contra-minus-ipsi)
+
+PAS1_correct
+*** LRP ***
+
+Relative path of second dataset: ../../../../../../right-PAS1_correct/Baseline Correction/Artifact Rejection-HEOG/Artifact Rejection-VEOG/Artifact Rejection-All/Average_right-PAS1_correct
+Channels of parent were kept.
+
+The following new channels have been constructed:
+((1) = Parent node, (2) = Second dataset)
+LRP(P8, P7) = Avg(P8(1) - P7(1), P7(2) - P8(2))
+LRP(O2, O1) = Avg(O2(1) - O1(1), O1(2) - O2(2))
+LRP(PO8, PO7) = Avg(PO8(1) - PO7(1), PO7(2) - PO8(2))
+
+Created Using Component Version 2.0.2682
+
+
+PAS1_wrong
+*** LRP ***
+
+Relative path of second dataset: ../../../../../../right-PAS1_wrong/Baseline Correction/Artifact Rejection-HEOG/Artifact Rejection-VEOG/Artifact Rejection-All/Average_right-PAS1_wrong
+Channels of parent were kept.
+
+The following new channels have been constructed:
+((1) = Parent node, (2) = Second dataset)
+LRP(P8, P7) = Avg(P8(1) - P7(1), P7(2) - P8(2))
+LRP(O2, O1) = Avg(O2(1) - O1(1), O1(2) - O2(2))
+LRP(PO8, PO7) = Avg(PO8(1) - PO7(1), PO7(2) - PO8(2))
+
+Created Using Component Version 2.0.2682
+
+
+PAS2_correct
+*** LRP ***
+
+Relative path of second dataset: ../../../../../../right-PAS2_correct/Baseline Correction/Artifact Rejection-HEOG/Artifact Rejection-VEOG/Artifact Rejection-All/Average_right-PAS2_correct
+Channels of parent were kept.
+
+The following new channels have been constructed:
+((1) = Parent node, (2) = Second dataset)
+LRP(P8, P7) = Avg(P8(1) - P7(1), P7(2) - P8(2))
+LRP(O2, O1) = Avg(O2(1) - O1(1), O1(2) - O2(2))
+LRP(PO8, PO7) = Avg(PO8(1) - PO7(1), PO7(2) - PO8(2))
+
+Created Using Component Version 2.0.2682
+
+PAS1_catch
+*** LRP ***
+
+Relative path of second dataset: ../../../../../../right_PAS1_catch/Baseline Correction/Artifact Rejection-HEOG/Artifact Rejection-VEOG/Artifact Rejection-All/Average_right-PAS1_catch
+Channels of parent were kept.
+
+The following new channels have been constructed:
+((1) = Parent node, (2) = Second dataset)
+LRP(P8, P7) = Avg(P8(1) - P7(1), P7(2) - P8(2))
+LRP(O2, O1) = Avg(O2(1) - O1(1), O1(2) - O2(2))
+LRP(PO8, PO7) = Avg(PO8(1) - PO7(1), PO7(2) - PO8(2))
+
+Created Using Component Version 2.0.2682
+
+
+
+
+
+
