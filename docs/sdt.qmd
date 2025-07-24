@@ -4,7 +4,7 @@ subtitle: Generalized Linear Models
 format: html
 embed-resources: true
 execute: 
-  echo: false
+  echo: true
 bibliography: "https://raw.githubusercontent.com/filippogambarota/bib-database/main/references.bib"
 csl: "https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl"
 ---
@@ -179,6 +179,7 @@ But this affect only the $d'$ that now is correct in terms of sign. To recover t
 ```{r}
 summ <- broom::tidy(fit, conf.int = TRUE)
 summ[1, "estimate"] <- summ[1, "estimate"] * -1
+summ[1, "statistic"] <- summ[1, "statistic"] * -1
 ci <- c(summ$conf.low[1], summ$conf.high[1])
 ci <- -1 * rev(ci)
 summ[1, "conf.low"] <- ci[1]

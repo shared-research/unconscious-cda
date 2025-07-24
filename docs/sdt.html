@@ -2404,6 +2404,12 @@ Figure 1: Example of the SDT model with <span class="math inline">\(d = 1\)</sp
 </div>
 <p>Then we can compute the SDT measures using the <code>psycho::dprime()</code> function.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>hit   <span class="ot">&lt;-</span> <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fa    <span class="ot">&lt;-</span> <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>miss  <span class="ot">&lt;-</span> <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>cr    <span class="ot">&lt;-</span> <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>psycho<span class="sc">::</span><span class="fu">dprime</span>(hit, fa, miss, cr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$dprime
 [1] 0.9656472
@@ -2423,6 +2429,24 @@ $c
 </div>
 <p>Let’s simulate a biased criterion. A positive criterion should be a tendency to say NO, thus higher number of misses and lower false alarm.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e3</span> <span class="co"># number of trials, a lot for precision</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>is_signal <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">each =</span> n) <span class="co"># signal present vs absent</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># dprime, distance between signal and noise</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="co"># criterion, unbiased</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># internal evidence (latent) signal + noise</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>signal <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(is_signal <span class="sc">==</span> <span class="dv">0</span>, <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">rnorm</span>(n, d, <span class="dv">1</span>))</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># decision based on evidence and criterion</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>say_signal <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(signal <span class="sc">&gt;</span> (d<span class="sc">/</span><span class="dv">2</span> <span class="sc">+</span> c), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>hit   <span class="ot">&lt;-</span> <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>fa    <span class="ot">&lt;-</span> <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>miss  <span class="ot">&lt;-</span> <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>cr    <span class="ot">&lt;-</span> <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>psycho<span class="sc">::</span><span class="fu">dprime</span>(hit, fa, miss, cr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$dprime
 [1] 0.9888458
@@ -2439,6 +2463,12 @@ $bppd
 $c
 [1] 0.5319936</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">hit =</span> hit,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">miss =</span> miss,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fa =</span> fa,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cr =</span> cr</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> hit miss   fa   cr 
  485  515  152  848 </code></pre>
@@ -2446,6 +2476,25 @@ $c
 </div>
 <p>Now let’s simulate a negative criterion thus the tendency to say YES where false alarm are higher than misses.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e3</span> <span class="co"># number of trials, a lot for precision</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>is_signal <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">each =</span> n) <span class="co"># signal present vs absent</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># dprime, distance between signal and noise</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">0.5</span> <span class="co"># criterion, unbiased</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># internal evidence (latent) signal + noise</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>signal <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(is_signal <span class="sc">==</span> <span class="dv">0</span>, <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">rnorm</span>(n, d, <span class="dv">1</span>))</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># decision based on evidence and criterion</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>say_signal <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(signal <span class="sc">&gt;</span> (d<span class="sc">/</span><span class="dv">2</span> <span class="sc">+</span> c), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>hit   <span class="ot">&lt;-</span> <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>fa    <span class="ot">&lt;-</span> <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>miss  <span class="ot">&lt;-</span> <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>cr    <span class="ot">&lt;-</span> <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>sdt <span class="ot">&lt;-</span> psycho<span class="sc">::</span><span class="fu">dprime</span>(hit, fa, miss, cr)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>sdt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$dprime
 [1] 0.909072
@@ -2462,6 +2511,12 @@ $bppd
 $c
 [1] -0.4520319</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">hit =</span> hit,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">miss =</span> miss,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fa =</span> fa,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cr =</span> cr</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> hit miss   fa   cr 
  818  182  499  501 </code></pre>
@@ -2469,6 +2524,19 @@ $c
 </div>
 <p>Finally let’s use a GLM to estimate SDT parameters from the last simulation:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    say_signal,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    is_signal</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>is_signal <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>is_signal)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(say_signal <span class="sc">~</span> is_signal, </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> dat, </span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">is_signal =</span> <span class="fu">contr.sum</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>), </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;probit&quot;</span>))</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -2493,10 +2561,17 @@ Number of Fisher Scoring iterations: 3</code></pre>
 </div>
 <p>The <code>(Intercept)</code> is the criterion and <code>is_signal1</code> the <span class="math inline">\(d&#39;\)</span>. The values are pretty similar to the <code>psycho::dprime()</code> function but the sign is reverted:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># psycho::dprime()</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">c =</span> sdt<span class="sc">$</span>c,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">dprime =</span> sdt<span class="sc">$</span>dprime</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         c     dprime 
 -0.4520319  0.9090720 </code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># glm</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)  is_signal1 
   0.4526314  -0.9102761 </code></pre>
@@ -2504,6 +2579,12 @@ Number of Fisher Scoring iterations: 3</code></pre>
 </div>
 <p>Firstly we need to change the sign of the contrasts:</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(say_signal <span class="sc">~</span> is_signal, </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> dat, </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">is_signal =</span> <span class="sc">-</span><span class="fu">contr.sum</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>), </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;probit&quot;</span>))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -2532,15 +2613,31 @@ Number of Fisher Scoring iterations: 3</code></pre>
 <li>change the response variable to 1 = not seen and 0 = seen</li>
 </ul>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>summ <span class="ot">&lt;-</span> broom<span class="sc">::</span><span class="fu">tidy</span>(fit, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>summ[<span class="dv">1</span>, <span class="st">&quot;estimate&quot;</span>] <span class="ot">&lt;-</span> summ[<span class="dv">1</span>, <span class="st">&quot;estimate&quot;</span>] <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>summ[<span class="dv">1</span>, <span class="st">&quot;statistic&quot;</span>] <span class="ot">&lt;-</span> summ[<span class="dv">1</span>, <span class="st">&quot;statistic&quot;</span>] <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>ci <span class="ot">&lt;-</span> <span class="fu">c</span>(summ<span class="sc">$</span>conf.low[<span class="dv">1</span>], summ<span class="sc">$</span>conf.high[<span class="dv">1</span>])</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>ci <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">*</span> <span class="fu">rev</span>(ci)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>summ[<span class="dv">1</span>, <span class="st">&quot;conf.low&quot;</span>] <span class="ot">&lt;-</span> ci[<span class="dv">1</span>]</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>summ[<span class="dv">1</span>, <span class="st">&quot;conf.high&quot;</span>] <span class="ot">&lt;-</span> ci[<span class="dv">2</span>]</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>summ</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 7
   term        estimate std.error statistic  p.value conf.low conf.high
   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
-1 (Intercept)   -0.453    0.0304      14.9 4.68e-50   -0.512    -0.393
+1 (Intercept)   -0.453    0.0304     -14.9 4.68e-50   -0.512    -0.393
 2 is_signal1     0.910    0.0609      15.0 1.36e-50    0.791     1.03 </code></pre>
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>say_signal_rev <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(dat<span class="sc">$</span>say_signal <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>fit_rev <span class="ot">&lt;-</span> <span class="fu">glm</span>(say_signal_rev <span class="sc">~</span> is_signal, </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> dat, </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">is_signal =</span> <span class="fu">contr.sum</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>), </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;probit&quot;</span>))</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(fit_rev, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 7
   term        estimate std.error statistic  p.value conf.low conf.high
@@ -2554,6 +2651,26 @@ Number of Fisher Scoring iterations: 3</code></pre>
 <h1>Predictors on SDT parameters</h1>
 <p>I want to simulate a change in criterion and recover from the GLM model.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e4</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>cond <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>is_signal <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">is_signal =</span> is_signal, <span class="at">cond =</span> cond, <span class="at">n =</span> <span class="dv">1</span><span class="sc">:</span>n)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>n <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(dat)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>c <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(dat<span class="sc">$</span>cond <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>d <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(dat<span class="sc">$</span>is_signal <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>signal <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(dat), dat<span class="sc">$</span>d, <span class="dv">1</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>say_signal <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(dat<span class="sc">$</span>signal <span class="sc">&gt;</span> (dat<span class="sc">$</span>d<span class="sc">/</span><span class="dv">2</span> <span class="sc">+</span> dat<span class="sc">$</span>c), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>say_signal_c <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(dat<span class="sc">$</span>say_signal <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>cond <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>cond)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>is_signal <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>is_signal )</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(say_signal <span class="sc">~</span> is_signal <span class="sc">*</span> cond,</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> dat,</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>           <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">is_signal =</span> <span class="fu">contr.sum</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>,</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>                            <span class="at">cond =</span> <span class="fu">contr.treatment</span>(<span class="dv">2</span>)),</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;probit&quot;</span>))</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -2580,6 +2697,40 @@ Number of Fisher Scoring iterations: 4</code></pre>
 </div>
 </div>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e4</span> <span class="co"># number of trials, a lot for precision</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># cond 1</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>is_signal <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">each =</span> n<span class="sc">/</span><span class="dv">2</span>) <span class="co"># signal present vs absent</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>d_1 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># dprime, distance between signal and noise</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>d_2 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>c_1 <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co"># criterion</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>c_2 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co"># internal evidence (latent) signal + noise</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>signal_1 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(is_signal <span class="sc">==</span> <span class="dv">0</span>, <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">rnorm</span>(n, d_1, <span class="dv">1</span>))</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>signal_2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(is_signal <span class="sc">==</span> <span class="dv">0</span>, <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">rnorm</span>(n, d_2, <span class="dv">1</span>))</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># decision based on evidence and criterion</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>say_signal_1 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(signal_1 <span class="sc">&gt;</span> (d_1<span class="sc">/</span><span class="dv">2</span> <span class="sc">+</span> c_1), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>say_signal_2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(signal_2 <span class="sc">&gt;</span> (d_2<span class="sc">/</span><span class="dv">2</span> <span class="sc">+</span> c_2), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">say_signal =</span> <span class="fu">c</span>(say_signal_1, say_signal_2),</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">cond =</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">each =</span> n),</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_signal =</span> <span class="fu">rep</span>(is_signal, <span class="dv">2</span>)</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>say_signal_rev <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(dat<span class="sc">$</span>say_signal <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>is_signal <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>is_signal)</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>cond <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>cond)</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(say_signal_rev <span class="sc">~</span> is_signal <span class="sc">*</span> cond, </span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dat, </span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;probit&quot;</span>), </span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">is_signal =</span> <span class="fu">contr.sum</span>(<span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -2603,10 +2754,34 @@ AIC: 23673
 
 Number of Fisher Scoring iterations: 4</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">coef</span>(fit)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">c0 =</span> coefs[<span class="dv">1</span>],</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">c2 =</span> coefs[<span class="dv">1</span>] <span class="sc">+</span> coefs[<span class="dv">3</span>],</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">d0 =</span> coefs[<span class="dv">2</span>],</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">d1 =</span> coefs[<span class="dv">2</span>] <span class="sc">+</span> coefs[<span class="dv">4</span>]</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>c0.(Intercept) c2.(Intercept)  d0.is_signal1  d1.is_signal1 
     0.01795327     0.49367417     1.01289448     0.99336425 </code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>dat0 <span class="ot">&lt;-</span> dat[dat<span class="sc">$</span>cond <span class="sc">==</span> <span class="dv">0</span>, ]</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>dat1 <span class="ot">&lt;-</span> dat[dat<span class="sc">$</span>cond <span class="sc">==</span> <span class="dv">1</span>, ]</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>hit0   <span class="ot">&lt;-</span> <span class="fu">with</span>(dat0, <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">1</span>))</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>fa0    <span class="ot">&lt;-</span> <span class="fu">with</span>(dat0, <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">1</span>))</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>miss0  <span class="ot">&lt;-</span> <span class="fu">with</span>(dat0, <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">0</span>))</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>cr0    <span class="ot">&lt;-</span> <span class="fu">with</span>(dat0, <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">0</span>))</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>hit1   <span class="ot">&lt;-</span> <span class="fu">with</span>(dat1, <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">1</span>))</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>fa1   <span class="ot">&lt;-</span> <span class="fu">with</span>(dat1, <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">1</span>))</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>miss1  <span class="ot">&lt;-</span> <span class="fu">with</span>(dat1, <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">0</span>))</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>cr1    <span class="ot">&lt;-</span> <span class="fu">with</span>(dat1, <span class="fu">sum</span>(is_signal <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> say_signal <span class="sc">==</span> <span class="dv">0</span>))</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>psycho<span class="sc">::</span><span class="fu">dprime</span>(</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>    hit0, fa0, miss0, cr0</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$dprime
 [1] 1.012674
@@ -2623,6 +2798,9 @@ $bppd
 $c
 [1] 0.01794868</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>psycho<span class="sc">::</span><span class="fu">dprime</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    hit1, fa1, miss1, cr1</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$dprime
 [1] 0.9930862
